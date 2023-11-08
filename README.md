@@ -3,7 +3,7 @@ Simulator for Tuner INN project using chrono
 
 ## Installation of chrono
 
-If your chrono environment does not have some packages, please try the following step.
+If your chrono environment does not work due to lack of some packages, please try the following step.
 
 Try creating an environment from this yaml file in this repo using:
 '''bash
