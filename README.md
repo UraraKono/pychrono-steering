@@ -18,7 +18,7 @@ conda install pychrono-8.0.0-py39_1.tar.bz2
 '''
 
 ## Code description
-* main.py: Run the simulation on the maps from maps directory. Create the control input and feed it to env.step()
+* main.py: Run the simulation on the maps from maps directory. Create the control input and feed it to env.step(). Right now, it just gives constant speed and steering command.
 * chrono_env/environment.py: Open-AI Gym-like environment. 'make' inits vehicle, terrain, and visualization. 'step' updates the state of the vehicle (env.my_hmmwv.state) and control input. It then  obtains and prints the steering angles of 4 wheels.
 * chrono_env/utils.py: This is the file that implements 'get_toe_in', which obtains the steering angle of a wheel.
 
