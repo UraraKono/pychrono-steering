@@ -3,7 +3,7 @@ Simulator for Tuner INN project using chrono
 
 ## Installation of chrono
 
-Clone to the github repo chrono-tunerINN
+If your chrono environment does not have some packages, please try the following step.
 
 Try creating an environment from this yaml file in this repo using:
 '''bash
@@ -18,14 +18,10 @@ conda install pychrono-8.0.0-py39_1.tar.bz2
 '''
 
 ## Code description
-* main_map_info.py: Run the simulation on the maps from f1tenth-racetrack that has centerline and raceline
+* main.py: Run the simulation on the maps from maps directory. Create the control input and feed it to env.step()
+* chrono_env/environment.py: Open-AI Gym-like environment. 'make' inits vehicle, terrain, and visualization. 'step' updates the state of the vehicle (env.my_hmmwv.state) and control input. It then  obtains and prints the steering angles of 4 wheels.
+* chrono_env/utils.py: This is the file that implements 'get_toe_in', which obtains the steering angle of a wheel.
 
-* main.py: Run the simulation on the maps from maps directory
 
-* MPC_VEH_HMMWV.py: It uses steering controller from chrono, which uses position feedback. So it's not real steering feedback.
-
-## chrono_env usage
-
-* Get the state variables: Every time env.step() is called, the state of the vehicle (env.my_hmmwv.state) is updated using 'get_vehicle_state' in chrono_env/utils.py. 
 
 

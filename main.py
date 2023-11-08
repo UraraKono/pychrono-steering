@@ -32,7 +32,6 @@ import matplotlib.pyplot as plt
 import yaml
 import time
 from argparse import Namespace
-from regulators.pure_pursuit import *
 from regulators.path_follow_mpc import *
 from models.extended_kinematic import ExtendedKinematicModel
 from models.configs import *
@@ -58,6 +57,7 @@ map_name = 'SaoPaulo'  # Nuerburgring, SaoPaulo, rounded_rectangle, l_shape, Bra
 t_end = 30
 # --------------
 
+# Init the ChronoEnv
 env = ChronoEnv(step_size, throttle_value)
 
 # Load map config file
@@ -141,6 +141,7 @@ while lap_counter < num_laps:
         speed = env.my_hmmwv.state[2] + u[0]*env.planner_ekin_mpc.config.DTK
         steering = env.driver_inputs.m_steering + u[1]*env.planner_ekin_mpc.config.DTK/env.config.MAX_STEER # [-1,1]
         # print("steering input", steering)
+
         # Debugging for toe-in angle
         steering = 1
         speed = 5.0
