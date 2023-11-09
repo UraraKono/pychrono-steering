@@ -54,7 +54,7 @@ map_name = 'SaoPaulo'  # Nuerburgring, SaoPaulo, rounded_rectangle, l_shape, Bra
 # constant_friction = 0.7
 # number_of_laps = 20
 # SAVE_MODEL = True
-t_end = 30
+t_end = 6
 # --------------
 
 # Init the ChronoEnv
@@ -183,14 +183,25 @@ plt.savefig("trajectory.png")
 
 plt.figure()
 plt.plot(env.toein_FL, label="Front Left")
-plt.plot(env.toein_FR, label="Front Right")
-plt.plot(env.toein_RL, label="Rear Left")
-plt.plot(env.toein_RR, label="Rear Right")
+# plt.plot(env.toein_FR, label="Front Right")
+# plt.plot(env.toein_RL, label="Rear Left")
+# plt.plot(env.toein_RR, label="Rear Right")
 plt.plot(env.steering_driver, label="driver input steering")
 plt.title("toe-in angle")
 plt.legend()
 plt.xlabel("time step")
 plt.ylabel("toe-in angle [deg]")
 plt.savefig("toe-in.png")
+
+plt.figure()
+plt.plot(env.roll, linestyle="solid", label="roll")
+plt.plot(env.pitch, linestyle="dashed", label="pitch")
+plt.plot(env.yaw, linestyle="dotted", label="yaw")
+plt.plot(env.max_steering_angle, linestyle="dashdot", label="max steering angle")
+plt.title("roll, pitch, yaw of wheel with respect to chassis")
+plt.legend()
+plt.xlabel("time step")
+plt.ylabel("angle [deg]")
+plt.savefig("roll_pitch_yaw.png")
 
 plt.show()

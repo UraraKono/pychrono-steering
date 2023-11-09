@@ -140,9 +140,9 @@ def get_vehicle_state(self):
     roll_angle = euler_angles.x
     pitch_angle = euler_angles.y
     yaw_angle = euler_angles.z
-    # print("Vehicle roll angle:", roll_angle)
-    # print("Vehicle pitch angle:", pitch_angle)
-    # print("Vehicle yaw angle:", yaw_angle)
+    print("Vehicle roll angle:", roll_angle)
+    print("Vehicle pitch angle:", pitch_angle)
+    print("Vehicle yaw angle:", yaw_angle)
 
     # Get the linear velocity of the chassis in the global frame
     chassis_velocity = vehicle.GetVehicle().GetChassis().GetBody().GetPos_dt()
@@ -195,7 +195,7 @@ def get_vehicle_state(self):
     # print("acc", acc)
 
     max_steering_angle = vehicle.GetVehicle().GetMaxSteeringAngle()
-    # print("max steering angle:", max_steering_angle)
+    print("max steering angle:", max_steering_angle)
 
     # print("steering angle", driver_inputs.m_steering)
 
@@ -281,7 +281,8 @@ def get_toe_in(self, wheel_state_global):
     n_v = self.my_hmmwv.GetVehicle().GetTransform().TransformDirectionLocalToParent(wheel_normal)
 
     # Toe-in
-    toe_in = math.atan2(n_v.x, n_v.y)
+    # toe_in = math.atan2(n_v.x, n_v.y)
+    toe_in = math.atan2(n.x, n.y)
 
     return toe_in
 

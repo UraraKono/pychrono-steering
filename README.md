@@ -6,9 +6,9 @@ Simulator for Tuner INN project using chrono
 If your chrono environment does not work due to lack of some packages, please try the following step.
 
 Try creating an environment from this yaml file in this repo using:
-'''bash
+```bash
 conda env create -f environment.yml -n chrono
-'''
+```
 
 Download this version of pychrono: https://anaconda.org/projectchrono/pychrono/8.0.0/download/linux-64/pychrono-8.0.0-py39_1.tar.bz2
 

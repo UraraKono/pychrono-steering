@@ -6,6 +6,7 @@ import math
 import numpy as np
 # from .utils import *
 from .utils import VehicleParameters, init_vehicle, init_terrain, init_irrlicht_vis, get_vehicle_state, get_toe_in
+from scipy.spatial.transform import Rotation as R
 
 class ChronoEnv:
     def __init__(self, step_size, throttle_value) -> None:
@@ -45,6 +46,9 @@ class ChronoEnv:
         self.toein_RL = []
         self.toein_RR = []
         self.steering_driver = []
+
+        self.roll, self.pitch, self.yaw = [], [], []
+        self.max_steering_angle = []
 
         self.driver_inputs = veh.DriverInputs()
         self.driver_inputs.m_throttle = throttle_value
@@ -162,20 +166,50 @@ class ChronoEnv:
         wheel_state_global = self.my_hmmwv.GetVehicle().GetWheel(0,0).GetState() #in global frame
         toe_in = get_toe_in(self, wheel_state_global)
 
-        wheel_state_global_2 = self.my_hmmwv.GetVehicle().GetWheel(0,1).GetState() #in global frame
-        toe_in_2 = get_toe_in(self, wheel_state_global_2)
+        # wheel_state_global_2 = self.my_hmmwv.GetVehicle().GetWheel(0,1).GetState() #in global frame
+        # toe_in_2 = get_toe_in(self, wheel_state_global_2)
 
-        wheel_state_global_3 = self.my_hmmwv.GetVehicle().GetWheel(1,0).GetState() #in global frame
-        toe_in_3 = get_toe_in(self, wheel_state_global_3)
-        wheel_state_global_4 = self.my_hmmwv.GetVehicle().GetWheel(1,1).GetState() #in global frame
-        toe_in_4 = get_toe_in(self, wheel_state_global_4)
+        # wheel_state_global_3 = self.my_hmmwv.GetVehicle().GetWheel(1,0).GetState() #in global frame
+        # toe_in_3 = get_toe_in(self, wheel_state_global_3)
+        # wheel_state_global_4 = self.my_hmmwv.GetVehicle().GetWheel(1,1).GetState() #in global frame
+        # toe_in_4 = get_toe_in(self, wheel_state_global_4)
+
+        #### Urara's idea 1 (weird results) ####
+        # Quaternion of the vehicle (chassis) in global frame
+        vehicle_quat_global = self.my_hmmwv.GetVehicle().GetRot()
+        # Quaternion of the wheel in global frame
+        wheel_quat_global = self.my_hmmwv.GetVehicle().GetWheel(0,0).GetState().rot
+        # Quaternion of the wheel with respect to the vehicle
+        wheel_quat_local = vehicle_quat_global.GetInverse()*wheel_quat_global
+        # Convert quaternion to euler angles
+        wheel_euler_local = wheel_quat_local.Q_to_Euler123()
+        roll, pitch, yaw = wheel_euler_local.x, wheel_euler_local.y, wheel_euler_local.z
+        max_steering_angle = self.my_hmmwv.GetVehicle().GetMaxSteeringAngle()
+        self.roll.append(roll*180/np.pi)
+        self.pitch.append(pitch*180/np.pi)
+        self.yaw.append(yaw*180/np.pi)
+        self.max_steering_angle.append(max_steering_angle*180/np.pi)
+        print("wheel with respect to vehicle: roll", roll*180/np.pi, "pitch", pitch*180/np.pi, "yaw", yaw*180/np.pi)
+
+        # #### Urara's idea 2 (weird results): The idea is the same as the idea 1, but implemented in scipy####
+        # max_steering_angle = self.my_hmmwv.GetVehicle().GetMaxSteeringAngle()
+        # vehicle_quat_global_scipy = R.from_quat([vehicle_quat_global.e0, vehicle_quat_global.e1, vehicle_quat_global.e2, vehicle_quat_global.e3])
+        # wheel_quat_global_scipy = R.from_quat([wheel_quat_global.e0, wheel_quat_global.e1, wheel_quat_global.e2, wheel_quat_global.e3])
+        # wheel_quat_local_scipy = vehicle_quat_global_scipy.inv()*wheel_quat_global_scipy
+        # wheel_euler_local_scipy = wheel_quat_local_scipy.as_euler('zxy', degrees=True)
+        # roll, pitch, yaw = wheel_euler_local_scipy[0], wheel_euler_local_scipy[1], wheel_euler_local_scipy[2]
+        # self.roll.append(roll)
+        # self.pitch.append(pitch)
+        # self.yaw.append(yaw)
+        # self.max_steering_angle.append(max_steering_angle*180/np.pi)
+        # ##########################################################
 
         self.toein_FL.append(toe_in*180/np.pi)
-        self.toein_FR.append(toe_in_2*180/np.pi)
-        self.toein_RL.append(toe_in_3*180/np.pi)
-        self.toein_RR.append(toe_in_4*180/np.pi)
+        # self.toein_FR.append(toe_in_2*180/np.pi)
+        # self.toein_RL.append(toe_in_3*180/np.pi)
+        # self.toein_RR.append(toe_in_4*180/np.pi)
         self.steering_driver.append(self.my_hmmwv.state[-1]*180/np.pi)
-        print("toe_in Front Left",toe_in*180/np.pi,"FR",toe_in_2*180/np.pi,"RL",toe_in_3*180/np.pi, "steering", self.my_hmmwv.state[-1]*180/np.pi)
+        # print("toe_in Front Left",toe_in*180/np.pi,"FR",toe_in_2*180/np.pi,"RL",toe_in_3*180/np.pi, "steering", self.my_hmmwv.state[-1]*180/np.pi)
         # print("toe_in",toe_in, "steering", self.my_hmmwv.state[-1]/self.my_hmmwv.GetVehicle().GetMaxSteeringAngle())
 
     def render(self) -> None:
